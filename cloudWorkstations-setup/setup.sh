@@ -66,3 +66,14 @@ if ! command_exists "k"; then
   alias k='kubectl'
   echo "Alias 'k' created."
 fi
+
+# Get the zone of the first (and only) zonal cluster
+zone=$(gcloud container clusters list --format="value(location)")
+
+# Check if a zone was found
+if [[ -z "$zone" ]]; then
+  echo "Error: No zonal GKE clusters found."
+else
+  # Configure kubectl with credentials to the cluster in the retrieved zone
+  gcloud container clusters get-credentials workshop-cluster --zone $zone
+fi
